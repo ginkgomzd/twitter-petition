@@ -1,0 +1,2 @@
+touch STOP
+echo "Please be patient while the daemon winds down. Dependent upon interval and size of run."

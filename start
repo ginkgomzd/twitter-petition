@@ -1,0 +1,6 @@
+
+if [ -f STOP ] ; then rm STOP; fi
+
+nohup ./daemon > daemon.log &
+
+tail -f daemon.log
