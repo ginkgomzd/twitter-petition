@@ -6,17 +6,10 @@ error_reporting(E_ALL);
 include dirname(__FILE__).'/db-conf.php'; # configure database connection variables
 include dirname(__FILE__).'/lib-php-cli-io.php';
 include dirname(__FILE__).'/tweet.php';
+include dirname(__FILE__).'/tweet_templates.php';
 
-$tweet_templates = array(
-    'Another opponent of #CISPA: %s %s %s @RepMikeRogers @Call_Me_Dutch',
-    '%s %s %s Opposes #CISPA  @RepMikeRogers @Call_Me_Dutch',
-    'Also against #CISPA: %s %s %s @RepMikeRogers @Call_Me_Dutch',
-    '%s %s %s Says #NoCISPA  @RepMikeRogers @Call_Me_Dutch',
-    'Dear @RepMikeRogers & @Call_Me_Dutch: #NoCISPA, Thx: %s %s %s',
-);
-
-$interval = 15; # seconds
-$number_of_petitioners_per_run = 3;
+$interval = 190; # seconds
+$number_of_petitioners_per_run = 5;
 
 $get_signers_sql = "SELECT * 
 FROM anonymous_petitioners p LEFT JOIN last_tweet l on p.id = l.petitioner_key
@@ -28,14 +21,16 @@ ON DUPLICATE KEY UPDATE `last_tweeted` = VALUES(`last_tweeted`), `tweet` = VALUE
 
 function get_oauth() {
   return array(
-    'consumer key' => '6R6cvzNuAsHif6l9u3kviw',
-    'consumer secret' => 'nUkonnV8t3gS78EVztqoY8djXccrUCZUxIw4PgwSepw',
-    'oauth token' => '1186627088-zQnMnLUadWb7abVE91SGXjq4iPhUr8tLu7dBi6T',
-    'oauth secret' => 'NYFAM9RhS1p5O6E0Lm0pK7Us6ky9jIl8ijlnzB4XdAk',
+    'consumer key' => 'SQ05blEcp1AXpl2vWUhdg',
+    'consumer secret' => 'rTTouoiT3dXY71sOFt1ruCjhCCCN7jzPfQnvtIQ2TmA',
+    'oauth token' => '1179371964-f3QeH5BQfgUvK9150JWU73WJBNyuhCpfIDcQV5g',
+    'oauth secret' => 'GRR6UCMn2iBjjOFKgh6UFeqyfVopdWiQz2nBBnTRU',
   );
 }
 
 ### END CONFIG ###
+
+$tweet_templates = get_tweet_templates(); 
 
 $db = new mysqli($HOST, $USER, $PASSWORD, $DB);
 if ($db->connect_errno) {
@@ -108,7 +103,7 @@ while ($signer = mysqli_fetch_array($signers) ) {
 
     # TWEET TWEET
     $tweet_status = tweet($tweet, get_oauth());
-var_dump($tweet_status);
+    if ($tweet_status['http status code'] != 200) var_dump($tweet_status);
 
     #log tweet so we don't repeat ourselves
     $db->query( sprintf($log_tweet_sql, $signer['id'], $tweet) );
