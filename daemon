@@ -3,7 +3,7 @@
 while [ ! -f STOP ];
 do
     ./robo-tweet.php
-    echo "run complete, exit code: $?; re-starting" >&2
+    echo "run complete, exit code: $?;"`date`" re-starting" >&2
     sleep 1
 done
 
