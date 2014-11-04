@@ -71,6 +71,11 @@ function get_tpl($pntr = NULL) {
   }
 }
 
+function printfTweet($tpl, $data) {
+  return sprintf(get_tpl(), $data['first'], $data['l-initial'], $data['state']);
+#  return sprintf(get_tpl(), $data['first'], $data['l-initial'], $data['city'], $data['state']);
+}
+
 function get_tweet($signer) {
 /****
  * Returns a tweet using the next template
@@ -79,12 +84,11 @@ function get_tweet($signer) {
 
   global $tpl_pointer;
 
-  $tweet = sprintf(get_tpl(), $signer['first'], $signer['l-initial'], $signer['city'], $signer['state']);
-
+  $tweet = printfTweet(get_tpl(), $signer);
   if ( strlen($tweet) > 140 ) {
     #try a different template:
     for ($n = 0; $n < num_templates(); $n++) {
-      $tweet = sprintf(get_tpl($n), $signer['first'], $signer['l-initial'], $signer['city'], $signer['state']);
+      $tweet = printfTweet(get_tpl($n), $signer);
       if ( strlen($tweet) < 140 ) return $tweet;
     }
   }
